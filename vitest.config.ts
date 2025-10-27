@@ -5,7 +5,7 @@ import {defineConfig} from 'vitest/config';
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: 'happy-dom', // ← Zmień z 'jsdom' na 'happy-dom'
+    environment: 'happy-dom',
     globals: true,
     setupFiles: './test/setup.ts',
   },

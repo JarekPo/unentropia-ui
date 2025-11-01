@@ -9,15 +9,16 @@ import {postChatMessage} from '@/services/unentropiaServices';
 
 const Home = () => {
   const [sessionId, setSessionId] = useState('');
+  const [message, setMessage] = useState('');
   const newSessionId = uuidv4();
 
   useEffect(() => {
     setSessionId(newSessionId);
   }, []);
 
-  const sendSampleMessage = async () => {
-    const data = await postChatMessage(sessionId, 'test, return success');
-    // const data = await postChatMessage(newSessionId, 'test message2, return ok2 and status and my first message');
+  const sendMessage = async () => {
+    const data = await postChatMessage(sessionId, message);
+    setMessage('');
     console.log(data.data.response);
   };
   return (
@@ -27,18 +28,21 @@ const Home = () => {
         <div className='flex flex-col w-full max-w-2xl m-auto max-h-[35rem] rounded-md p-2 border flex-grow h-full justify-end'>
           <div className='flex flex-col flex-grow justify-end h-full'>
             <Textarea
-              placeholder='Type your message here.'
+              placeholder='Ask me anything...'
               id='message'
-              className='w-full max-h-120 resize-y overflow-auto'
+              className='w-full h-50 max-h-120 resize-y overflow-auto'
+              onChange={(e) => setMessage(e.target.value)}
+              value={message}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  sendMessage();
+                }
+              }}
             />
             <div className='flex flex-col sm:flex-row justify-end mt-2 gap-2'>
               <div className='sm:flex-1' />
-              <Button
-                variant='outline'
-                aria-label='Send message'
-                onClick={sendSampleMessage}
-                className='w-full sm:w-auto'
-              >
+              <Button variant='outline' aria-label='Send message' onClick={sendMessage} className='w-full sm:w-auto'>
                 Send Message
               </Button>
             </div>

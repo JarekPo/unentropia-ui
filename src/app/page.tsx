@@ -46,6 +46,12 @@ const Home = () => {
                 msg.role === 'user' ? 'bg-blue-100 self-end text-right' : 'bg-gray-200 self-start text-left'
               }`}
             >
+              {msg.role === 'assistant' ? (
+                <>
+                  <span className='whitespace-pre-wrap font-medium text-sm capitalize'>{msg.role}:</span>
+                  <br />
+                </>
+              ) : null}
               {msg.content}
             </div>
           ))}

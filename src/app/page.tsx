@@ -1,11 +1,14 @@
 'use client';
 import {useEffect, useRef, useState} from 'react';
 
+import Image from 'next/image';
 import {v4 as uuidv4} from 'uuid';
 
 import {Button} from '@/components/ui/button';
 import Textarea from '@/components/ui/textarea';
 import {postChatMessage} from '@/services/unentropiaServices';
+
+import chatLogo from '../../public/logo.png';
 
 const Home = () => {
   const [sessionId, setSessionId] = useState('');
@@ -37,7 +40,7 @@ const Home = () => {
   return (
     <>
       <div className='flex flex-col items-center gap-6 p-4 sm:p-6 border min-h-screen'>
-        <h1 className='text-xl sm:text-2xl font-bold'>Unentropia</h1>
+        <Image src={chatLogo} alt='chat logo' width={200} height={500} />
         <div className='flex flex-col w-full max-w-2xl flex-grow overflow-y-auto gap-3 p-2 border rounded-md'>
           {messages.map((msg, index) => (
             <div

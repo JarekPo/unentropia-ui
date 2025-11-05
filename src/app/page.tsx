@@ -2,6 +2,7 @@
 import {useEffect, useRef, useState} from 'react';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import {v4 as uuidv4} from 'uuid';
 
 import {Button} from '@/components/ui/button';
@@ -40,13 +41,17 @@ const Home = () => {
   return (
     <>
       <div className='flex flex-col items-center gap-6 p-4 sm:p-6 border min-h-screen'>
-        <Image src={chatLogo} alt='chat logo' width={200} height={500} />
-        <div className='flex flex-col w-full max-w-2xl flex-grow overflow-y-auto gap-3 p-2 border rounded-md'>
+        <Link href='/'>
+          <Image src={chatLogo} alt='chat logo' width={200} height={500} />
+        </Link>
+        <div className='flex flex-col w-full max-w-2xl flex-grow overflow-y-auto gap-3 p-2 rounded-md'>
           {messages.map((msg, index) => (
             <div
               key={index} // use DB message id when table storage is implemented
-              className={`p-3 rounded-md max-w-[85%] ${
-                msg.role === 'user' ? 'bg-blue-100 self-end text-right' : 'bg-gray-200 self-start text-left'
+              className={`p-3 rounded-md  overflow-wrap break-words whitespace-pre-wrap ${
+                msg.role === 'user'
+                  ? 'bg-blue-100 self-end text-left max-w-[85%]'
+                  : 'bg-gray-200 self-start text-left max-w-[95%]'
               }`}
             >
               {msg.role === 'assistant' ? (

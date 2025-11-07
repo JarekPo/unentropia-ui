@@ -6,6 +6,7 @@ import Link from 'next/link';
 import {v4 as uuidv4} from 'uuid';
 
 import {Button} from '@/components/ui/button';
+import {Spinner} from '@/components/ui/spinner';
 import Textarea from '@/components/ui/textarea';
 import {postChatMessage} from '@/services/unentropiaServices';
 
@@ -15,6 +16,7 @@ const Home = () => {
   const [sessionId, setSessionId] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Array<{role: string; content: string}>>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const newSessionId = uuidv4();
 
@@ -28,25 +30,23 @@ const Home = () => {
 
   const sendMessage = async () => {
     if (!message.trim()) return;
-    const data = await postChatMessage(sessionId, message);
-
-    setMessages((prev) => [
-      ...prev,
-      {role: 'user', content: message},
-      {role: 'assistant', content: data.data.response},
-    ]);
-
+    setMessages((prev) => [...prev, {role: 'user', content: message}]);
     setMessage('');
+    setIsLoading(true);
+    const data = await postChatMessage(sessionId, message);
+    setMessages((prev) => [...prev, {role: 'assistant', content: data.data.response}]);
+    setIsLoading(false);
   };
   return (
     <>
       <div className='flex flex-col items-center gap-6 p-4 sm:p-6 border min-h-screen'>
         <Link href='/'>
-          <Image src={chatLogo} alt='chat logo' width={200} height={500} />
+          <Image src={chatLogo} alt='chat logo' width={200} height={undefined} loading='eager' />
         </Link>
         <div className='flex flex-col w-full max-w-2xl flex-grow overflow-y-auto gap-3 p-2 rounded-md'>
           {messages.map((msg, index) => (
             <div
+              // eslint-disable-next-line react/no-array-index-key
               key={index} // use DB message id when table storage is implemented
               className={`p-3 rounded-md  overflow-wrap break-words whitespace-pre-wrap ${
                 msg.role === 'user'
@@ -63,6 +63,7 @@ const Home = () => {
               {msg.content}
             </div>
           ))}
+          {isLoading && <Spinner className='size-6' />}
           <div ref={messagesEndRef} />
         </div>
         <div className='flex flex-col w-full max-w-2xl p-2 border rounded-md'>

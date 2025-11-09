@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {v4 as uuidv4} from 'uuid';
 
-import Chat from '@/components/custom/Chat';
+import Chat from '@/components/chat/Chat';
 
 import chatLogo from '../../public/logo.png';
 

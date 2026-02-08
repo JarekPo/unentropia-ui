@@ -7,6 +7,7 @@ import {v4 as uuidv4} from 'uuid';
 
 import Chat from '@/components/chat/Chat';
 import LogoutButton from '@/components/custom/LogoutButton';
+import {getFirstName} from '@/lib/utils';
 import {unentropiaApiInstance} from '@/services/instances';
 
 const Home = () => {
@@ -44,7 +45,7 @@ const Home = () => {
         <div className='flex flex-col items-center gap-6 p-4 sm:p-6 min-h-120'>
           <LogoutButton />
           {/* @ts-ignore */}
-          <>Hi {user?.data?.name}</>
+          <>Hi {getFirstName(user?.data?.name) || 'There'}!</>
           <Chat sessionId={sessionId} />
         </div>
       )}

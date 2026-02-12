@@ -1,3 +1,9 @@
+'use client';
+
+import Markdown from 'react-markdown';
+
+import remarkGfm from 'remark-gfm';
+
 interface ChatMessageProps {
   role: 'user' | 'assistant';
   content: string;
@@ -6,17 +12,19 @@ interface ChatMessageProps {
 const ChatMessage = ({role, content}: ChatMessageProps) => {
   return (
     <div
-      className={`p-3 rounded-md overflow-wrap break-words whitespace-pre-wrap ${
-        role === 'user' ? 'bg-blue-100 self-end text-left max-w-[85%]' : 'bg-gray-200 self-start text-left max-w-[95%]'
+      className={`p-3 rounded-md break-words ${
+        role === 'user' ? 'bg-blue-100 self-end max-w-[85%]' : 'bg-gray-100 self-start max-w-[95%]'
       }`}
     >
       {role === 'assistant' && (
         <>
-          <span className='whitespace-pre-wrap font-medium text-sm capitalize'>{role}:</span>
+          <span className='font-medium text-sm capitalize'>{role}:</span>
           <br />
         </>
       )}
-      {content}
+      <div className='prose prose-sm max-w-none'>
+        <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>
+      </div>
     </div>
   );
 };

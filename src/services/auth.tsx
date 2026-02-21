@@ -11,6 +11,17 @@ unentropiaApiInstance.interceptors.request.use((config) => {
   return config;
 });
 
+unentropiaApiInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      await unentropiaApiInstance.post('/auth/refresh');
+      return unentropiaApiInstance(error.config);
+    }
+    return Promise.reject(error);
+  }
+);
+
 const Login = async () => {
   const response = await unentropiaApiInstance.get('auth/google/url');
   const {url} = await response.data;

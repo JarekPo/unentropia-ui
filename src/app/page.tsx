@@ -1,4 +1,6 @@
 'use client';
+
+// eslint-disable-next-line simple-import-sort/imports
 import {useEffect, useState} from 'react';
 
 import {AxiosResponse} from 'axios';
@@ -8,6 +10,7 @@ import {v4 as uuidv4} from 'uuid';
 import Chat from '@/components/chat/Chat';
 import LogoutButton from '@/components/custom/LogoutButton';
 import {getFirstName} from '@/lib/utils';
+import '@/services/auth';
 import {unentropiaApiInstance} from '@/services/instances';
 
 const Home = () => {

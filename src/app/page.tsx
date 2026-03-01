@@ -8,6 +8,7 @@ import {useRouter} from 'next/navigation';
 import {v4 as uuidv4} from 'uuid';
 
 import Chat from '@/components/chat/Chat';
+import LoginButton from '@/components/custom/LoginButton';
 import LogoutButton from '@/components/custom/LogoutButton';
 import {getFirstName} from '@/lib/utils';
 import '@/services/auth';
@@ -36,22 +37,25 @@ const Home = () => {
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    if (user === null && !isLoading) {
-      router.push('/login');
-    }
-  }, [user, router, isLoading]);
+  // obligatory login temporarily disabled
+  // useEffect(() => {
+  //   if (user === null && !isLoading) {
+  //     router.push('/login');
+  //   }
+  // }, [user, router, isLoading]);
 
   return (
     <>
-      {!isLoading && user && (
-        <div className='flex flex-col items-center gap-6 p-4 sm:p-6 min-h-120'>
-          <LogoutButton />
-          {/* @ts-ignore */}
-          <>Hi {getFirstName(user?.data?.name) || 'There'}!</>
-          <Chat sessionId={sessionId} />
-        </div>
-      )}
+      <div className='flex flex-col items-center gap-6 p-4 sm:p-6 min-h-120'>
+        {!isLoading && (
+          <>
+            {user ? <LogoutButton /> : <LoginButton />}
+            {/* @ts-ignore */}
+            Hi {getFirstName(user?.data?.name) || 'There'}!
+          </>
+        )}
+        <Chat sessionId={sessionId} />
+      </div>
     </>
   );
 };

@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 
+import {useTypewriter} from '@/hooks/useTypewriter';
 import {postChatMessage} from '@/services/unentropiaServices';
 
 import {Spinner} from '../ui/spinner';
@@ -36,13 +37,22 @@ const Chat = ({sessionId}: ChatProps) => {
     }
   };
 
+  const lastAssistantIndex = messages.findLastIndex((msg) => msg.role === 'assistant') ?? -1;
+  const lastAssistantMessage = lastAssistantIndex !== -1 ? messages[lastAssistantIndex].content : '';
+  const typedText = useTypewriter(lastAssistantMessage);
+
   return (
     <>
       <div className='flex flex-col w-full max-w-2xl flex-grow overflow-y-auto gap-3 p-2 rounded-md'>
-        {messages.map((msg, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <ChatMessage key={index} role={msg.role} content={msg.content} /> // use DB message id when table storage is implemented
-        ))}
+        {messages.map((msg, index) => {
+          const isLastAssistant = index === lastAssistantIndex && msg.role === 'assistant';
+          const content = isLastAssistant ? typedText : msg.content;
+
+          return (
+            // eslint-disable-next-line react/no-array-index-key
+            <ChatMessage key={index} role={msg.role} content={content} /> // TODO: use message id when DB storage is implemented
+          );
+        })}
         {isLoading && <Spinner className='size-6' />}
         <div ref={messagesEndRef} />
       </div>

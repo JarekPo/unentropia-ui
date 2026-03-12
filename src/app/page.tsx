@@ -3,7 +3,6 @@
 // eslint-disable-next-line simple-import-sort/imports
 import {useEffect, useState} from 'react';
 
-import {AxiosResponse} from 'axios';
 import {useRouter} from 'next/navigation';
 import {v4 as uuidv4} from 'uuid';
 
@@ -13,10 +12,11 @@ import LogoutButton from '@/components/custom/LogoutButton';
 import {getFirstName} from '@/lib/utils';
 import '@/services/auth';
 import {unentropiaApiInstance} from '@/services/instances';
+import {User} from '@/types/types';
 
 const Home = () => {
   const [sessionId, setSessionId] = useState<string>('');
-  const [user, setUser] = useState<AxiosResponse<object> | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
@@ -25,7 +25,7 @@ const Home = () => {
     setSessionId(newSessionId);
     const fetchUser = async () => {
       try {
-        const response = await unentropiaApiInstance.get('/auth/google/me');
+        const response: User = await unentropiaApiInstance.get('/auth/google/me');
         setUser(response || null);
         setIsLoading(false);
       } catch (error) {
@@ -50,11 +50,10 @@ const Home = () => {
         {!isLoading && (
           <>
             {user ? <LogoutButton /> : <LoginButton />}
-            {/* @ts-ignore */}
-            Hi {getFirstName(user?.data?.name) || 'There'}!
+            Hi {(user && getFirstName(user.data.name)) || 'There'}!
           </>
         )}
-        <Chat sessionId={sessionId} />
+        <Chat sessionId={sessionId} user={user} />
       </div>
     </>
   );

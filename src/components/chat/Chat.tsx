@@ -3,15 +3,17 @@ import {useEffect, useRef, useState} from 'react';
 import {useTypewriter} from '@/hooks/useTypewriter';
 import {postChatMessage} from '@/services/unentropiaServices';
 
+import {User} from '@/types/types';
 import {Spinner} from '../ui/spinner';
 import ChatInput from './ChatInput';
 import ChatMessage from './ChatMessage';
 
 interface ChatProps {
   sessionId: string;
+  user?: User;
 }
 
-const Chat = ({sessionId}: ChatProps) => {
+const Chat = ({sessionId, user}: ChatProps) => {
   const [messages, setMessages] = useState<Array<{role: 'user' | 'assistant'; content: string}>>([]);
   const [message, setMessage] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -28,7 +30,7 @@ const Chat = ({sessionId}: ChatProps) => {
     setIsLoading(true);
 
     try {
-      const data = await postChatMessage(sessionId, message);
+      const data = await postChatMessage(sessionId, message, user?.data.id ?? null);
       setMessages((prev) => [...prev, {role: 'assistant', content: data.data.response}]);
     } catch (error) {
       setMessages((prev) => [...prev, {role: 'assistant', content: 'Error retrieving response.'}]);
